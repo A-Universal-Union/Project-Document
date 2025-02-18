@@ -1,5 +1,9 @@
 Notes
-intro
+=====
+
+social network analysis algorithms
+--
+
 1. software: data collection, visualization, network structure, dynamics, includes algorithms for calculating network metrics (centrality, clustering coefficient, community detection)
 	1. examples: Gephi, Pajek, NodeXL
 2. graph sampling algorithms: improves efficiency of analysis (e.g. 10,000 nodes vs 8,000,000,000 nodes is a massive difference in graph complexity)
