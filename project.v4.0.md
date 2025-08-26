@@ -327,7 +327,7 @@ Protect identities as the foundational security requirement, ensuring no derivat
 
 **Analysis of Research Needed [see References section]**  
 - Key management strategies, and some issues [9-14].  
-- Optimal trust-graph metrics and sybil resiliency [15-35].  
+- Optimal trust-graph metrics and sybil resiliency [15-35][191-207].  
 - ZKP protocols proving uniqueness without revealing biometrics or personal data [36-39].  
 - Onboarding: liveness, collusion, and coercion resistance [40-60].
 
@@ -408,7 +408,7 @@ Deliver privacy-preserving analytics to support governance decisions, measure tr
 - Visualization standards preventing micro-targeting or individual identification [166-170].  
 - Decentralized computation to avoid central aggregation risks [171][172].  
 - Auditing of NLP/LLM clustering methods to minimize bias and ensure cultural/linguistic inclusivity [173-177].  
-
+- Analysis & predictions [191-207].
 
 ### 6. Network and Consensus Layer
 
@@ -424,9 +424,9 @@ Prevent tracing votes and discussion activity to specific devices or endpoints, 
 - Archival nodes for full historical retention.
 
 **Analysis of Research Needed [see References section]**  
-- Consensus mechanisms optimized for hybrid federated/public designs (Tendermint, HotStuff, Narwhal/Bullshark).  
-- State proof systems (Verkle trees, succinct proofs) for light clients.  
-- Recovery protocols for network partitions or validator compromise.
+- Consensus mechanisms optimized for hybrid federated/public designs (Tendermint, HotStuff, Narwhal/Bullshark) [183-186][190].  
+- State proof systems (Verkle trees, succinct proofs) for light clients [187][188].  
+- Recovery protocols for network partitions or validator compromise [189].
 
 ## H) Low-Level Technical Details (Established and Implementable)
 
@@ -434,48 +434,48 @@ Prevent tracing votes and discussion activity to specific devices or endpoints, 
 Due to the open research requirements outlined in the preceding **High-Level Technical Overview**, this section is not complete or sure of itself. The following specifications cover components and configurations already in widespread, verifiable use or undergoing formal standardization. All parameters remain subject to revision based on future testing, security audits, and expert review.
 
 ### 1. Cryptographic Standards
-- **Asymmetric Encryption (classical)** — X25519 (Curve25519) for key exchange; Ed25519 for digital signatures [25][26]. *(Not quantum-safe — to be paired with PQC algorithms.)*  
-- **Post-Quantum Cryptography (PQC)** — CRYSTALS-Kyber (key encapsulation) and CRYSTALS-Dilithium (signatures), per NIST PQC Round 3 selections [18][19].  
+- **Asymmetric Encryption (classical)** — X25519 (Curve25519) for key exchange; Ed25519 for digital signatures. *(Not quantum-safe — to be paired with PQC algorithms.)*  
+- **Post-Quantum Cryptography (PQC)** — CRYSTALS-Kyber (key encapsulation) and CRYSTALS-Dilithium (signatures), per NIST PQC Round 3 selections.  
 - **Symmetric Encryption** — AES-256-GCM for general-purpose encryption *(quantum-resistant; Grover’s algorithm reduces effective key strength to ~128 bits)*; ChaCha20-Poly1305 for mobile/low-power environments.  
-- **Hashing** — SHA3-256 and BLAKE3 for general hashing *(quantum-resistant under Grover’s algorithm)*; Poseidon hash for zero-knowledge proof (ZKP) circuits [17].  
+- **Hashing** — SHA3-256 and BLAKE3 for general hashing *(quantum-resistant under Grover’s algorithm)*; Poseidon hash for zero-knowledge proof (ZKP) circuits.  
 - **Key Derivation** — HKDF with SHA3-256 for session key derivation.
 
 ### 2. Identity Wallet Structure
 - **Storage** — Encrypted with AES-256-GCM using a key derived from user credentials via Argon2id (memory-hard key derivation).  
-- **Recovery** — Social recovery via threshold signatures (e.g., 3-of-5 trusted peers) using FROST multisignature scheme [38].  
-- **Onboarding** — Live biometric check combined with witness-signed attestations, committed to the trust graph via signed proof objects [51][52][53][54].
+- **Recovery** — Social recovery via threshold signatures (e.g., 3-of-5 trusted peers) using FROST multisignature scheme.  
+- **Onboarding** — Live biometric check combined with witness-signed attestations, committed to the trust graph via signed proof objects.
 
 ### 3. Trust Graph Representation
 - **Graph Structure** — Directed graph stored locally with periodic hashed summaries anchored to the blockchain.  
 - **Connection Limit** — Soft limit on attestations per user to reduce Sybil attack potential (tunable via governance).  
-- **Scoring** — Multi-factor trust weighting (historical accuracy, peer endorsements, anomaly detection) [1][2][3][4][5][6][7][8].
+- **Scoring** — Multi-factor trust weighting (historical accuracy, peer endorsements, anomaly detection).
 
 ### 4. Communication Protocols
-- **Transport Security** — Noise Protocol Framework for encrypted sessions [25], layered over QUIC for low-latency transport [27].  
-- **Metadata Protection** — Pluggable routing layer supporting Tor [28], I2P [32], or mixnets [29][30][31]; cover traffic enabled for voting and other sensitive actions.  
+- **Transport Security** — Noise Protocol Framework for encrypted sessions, layered over QUIC for low-latency transport.  
+- **Metadata Protection** — Pluggable routing layer supporting Tor, I2P, or mixnets; cover traffic enabled for voting and other sensitive actions.  
 - **Message Format** — Protobuf or FlatBuffers for efficient serialization; optional JSON for human-readable debugging.
 
 ### 5. Voting Protocol (Proof-Required Mode)
-- **Proof Types** — Zero-knowledge proof of eligibility (zk-SNARKs or zk-STARKs) without revealing voter identity [9][10][11][12][13][14][15][16][17].  
+- **Proof Types** — Zero-knowledge proof of eligibility (zk-SNARKs or zk-STARKs) without revealing voter identity.  
 - **Ballot Structure** — Commit–Reveal scheme:  
   1. Commitment hash of vote choice and nonce submitted.  
   2. Reveal phase publishes choice + nonce for verification.  
 - **Auditability** — Merkle tree of commitments anchored to blockchain; voters can verify inclusion without revealing vote content.
 
 ### 6. Voting Protocol (Proof-Free Mode)
-- **Authentication** — Pseudonymous signatures using Ed25519 [26].  
+- **Authentication** — Pseudonymous signatures using Ed25519.  
 - **Aggregation** — Trust-weighted tally computed locally and verifiably aggregated via federated nodes.  
 - **Anti-Spam** — Per-pseudonym rate limits and trust-score adjustments for suspected flooding.
 
 ### 7. Data Analytics Privacy Controls
-- **Differential Privacy Parameters** — ε (epsilon) set between 0.1 and 1.0 for strong privacy; tunable per query type [45][46][47][48].  
+- **Differential Privacy Parameters** — ε (epsilon) set between 0.1 and 1.0 for strong privacy; tunable per query type.  
 - **Noise Distribution** — Laplace or Gaussian mechanism depending on output domain.  
 - **Minimum Aggregation Threshold** — No output generated below 100 unique contributors (configurable via governance).
 
 ### 8. Network & Consensus
-- **Consensus Algorithm** — Tendermint Core (Byzantine Fault Tolerant) for federated node coordination [33].  
+- **Consensus Algorithm** — Tendermint Core (Byzantine Fault Tolerant) for federated node coordination.  
 - **State Commitments** — Merkle-Patricia trie roots anchored to blockchain at fixed intervals.  
-- **Light Client Proofs** — Verkle trees for compact state verification [37].  
+- **Light Client Proofs** — Verkle trees for compact state verification.  
 - **Storage Strategy** — Light clients keep recent state; pruned nodes retain partial history; archival nodes store full history with cryptographic proof of completeness.
 
 
@@ -1130,3 +1130,57 @@ A number of reference links point to pay walled journals, but most publications 
 [176] Uncovering Measurement Biases in LLM Embedding Spaces: The Anna Karenina Principle and Its Implications for Automated Feedback - https://link.springer.com/article/10.1007/s40593-025-00485-7
 
 [177] LLMAuditor: A Framework for Auditing Large Language Models Using Human-in-the-Loop - https://arxiv.org/abs/2402.09346
+
+## Network and Consensus Layer
+
+[183] The latest gossip on BFT consensus - https://arxiv.org/abs/1807.04938
+
+[184] Correctness and Fairness of Tendermint-core Blockchains - https://arxiv.org/abs/1805.08429
+
+[185] Albatross: An optimistic consensus algorithm - https://arxiv.org/abs/1903.01589
+
+[186] Fed-DDM: A Federated Ledgers based Framework for Hierarchical Decentralized Data Marketplaces - https://arxiv.org/pdf/2104.05583
+
+[187] Towards Stateless Clients in Ethereum: Benchmarking Verkle Trees and Binary Merkle Trees with SNARKs - https://arxiv.org/abs/2504.14069
+
+[188] How To Build An Algorand Light Client - With State Proofs - https://developer.algorand.org/docs/get-details/stateproofs/light_client/
+
+[189] Fraud Proofs and SPV (Lightweight) Clients - Easier Said than Done? - https://tlu.tarilabs.com/cryptography/fraud-proofs
+
+[190] A Comprehensive Review of Blockchain Consensus Mechanisms - https://www.researchgate.net/publication/350031088_A_Comprehensive_Review_of_Blockchain_Consensus_Mechanisms
+
+## Trust & Analytics (shoehorned references)
+
+[191] Measuring trust in social networks based on linear uncertainty theory - https://www.sciencedirect.com/science/article/abs/pii/S0020025519308060
+
+[192] Votes in the Balance: A Statistical Analysis of Voting Behavior in the 2016 Presidential Electionthe 2016 Presidential Election - https://scholarworks.harding.edu/cgi/viewcontent.cgi?article=1000&context=hurc
+
+[193] The Effects of Forecasts on the Accuracy and Precision of Expectations - https://pmc.ncbi.nlm.nih.gov/articles/PMC12166975
+
+[194] A new model for calculating the maximum trust in Online Social Networks and solving by Artificial Bee Colony algorithm - https://computationalsocialnetworks.springeropen.com/articles/10.1186/s40649-020-00077-6
+
+[195] Trust Assessment in Online Social Networks - https://arxiv.org/abs/1909.10066
+
+[196] Understanding Graph-based Trust Evaluation in Online Social Networks: Methodologies and Challenges - https://cis.temple.edu/~wu/research/publications/Publication_files/20160219-trustsurvey-acm.pdf
+
+[197] Majority Dynamics and Aggregation of Information in Social Networks - https://arxiv.org/abs/1207.0893
+
+[198] The Effects of Forecasts on the Accuracy and Precision of Expectations - https://pmc.ncbi.nlm.nih.gov/articles/PMC12166975
+
+[199] A Hybrid Method of Sentiment Analysis and Machine Learning Algorithm for the U.S. Presidential Election Forecasting - https://arxiv.org/html/2312.05584v1
+
+[200] Social media discourse and voting decisions influence: sentiment analysis in tweets during an electoral period - https://link.springer.com/article/10.1007/s13278-023-01048-1
+
+[201] Exploiting Social Network Structure for Person-to-Person Sentiment Analysis - https://arxiv.org/abs/1409.2450
+
+[202] Exploring Trust Dynamics in Online Social Networks: A Social Network Analysis Perspective - https://www.mdpi.com/2297-8747/29/3/37
+
+[203] DeGroot learning - https://en.wikipedia.org/wiki/DeGroot_learning
+
+[204] Statistical Physics Models of Belief Dynamics: Theory and Empirical Tests - https://arxiv.org/abs/1706.02287
+
+[205] Propagation of Trust and Distrust - https://snap.stanford.edu/class/cs224w-readings/guha04trust.pdf
+
+[206] The Statistical Analysis of Roll Call Data - https://www.cambridge.org/core/journals/american-political-science-review/article/abs/statistical-analysis-of-roll-call-data/75DBC6645F85A764AE9E5DBF468AB813
+
+[207] Pooling the polls over an election campaign - https://www.tandfonline.com/doi/abs/10.1080/10361140500302472
